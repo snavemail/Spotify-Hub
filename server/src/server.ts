@@ -7,12 +7,12 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv'
 
-// Load environment variables from .env file
-dotenv.config();
+dotenv.config({path: '../.env'});
 
-const client_id = process.env.SPOTIFY_CLIENT_ID;
-const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
+
+const client_id = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+const client_secret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
+const redirect_uri = process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
 
 
 const generateRandomString = (length: number): string => {
@@ -31,7 +31,28 @@ app.use(express.static(__dirname + '/public'))
   .use(cookieParser())
   .use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req: Request, res: Response) => {
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>My Simple HTML Page</title>
+      </head>
+      <body>
+        <h1>Hello, this is a simple HTML page!</h1>
+      </body>
+    </html>
+  `;
+
+  res.setHeader('Content-Type', 'text/html');
+
+  // Send the HTML content as the response
+  res.send(htmlContent);
+})
+
 app.get('/login', (req: Request, res: Response) => {
+  console.log('Client ID:', client_id);
+  console.log('Redirect URI:', redirect_uri);
   const state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -92,13 +113,13 @@ app.get('/callback', (req: Request, res: Response) => {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
+        res.redirect('http://localhost:3000/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token,
           }));
       } else {
-        res.redirect('/#' +
+        res.redirect('http://localhost:3000/#' +
           querystring.stringify({
             error: 'invalid_token',
           }));
