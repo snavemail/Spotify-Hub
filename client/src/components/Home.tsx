@@ -1,16 +1,12 @@
-import React from 'react';
+import React from 'react'
+import { logout } from '../spotify'
 
-const Home: React.FC = () => {
-  const handleLogin = async () => {
-      window.location.href = 'http://localhost:8888/login';
-  };
-
+export default function Home({ token }: { token: string }) {
   return (
-    <div>
-      <h1>Spotify Login</h1>
-      <button onClick={handleLogin}>Log in with Spotify</button>
+    <div style={{ width: '100%', alignItems: 'center' }}>
+      <h1>Home Page</h1>
+      <p>{token}</p>
+      <button onClick={logout}>Logout</button>
     </div>
-  );
-};
-
-export default Home;
+  )
+}
