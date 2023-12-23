@@ -28,8 +28,6 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/login', (req: Request, res: Response) => {
-  console.log('Client ID:', client_id)
-  console.log('Redirect URI:', redirect_uri)
   const state = generateRandomString(16)
   res.cookie(stateKey, state)
 
@@ -85,7 +83,7 @@ app.get('/callback', (req: Request, res: Response) => {
 
         // we can also pass the token to the browser to make requests from there
         res.redirect(
-          'http://localhost:3000/' +
+          'http://localhost:3000/#' +
             querystring.stringify({
               access_token: access_token,
               refresh_token: refresh_token,
@@ -93,7 +91,7 @@ app.get('/callback', (req: Request, res: Response) => {
         )
       } else {
         res.redirect(
-          'http://localhost:3000/' +
+          'http://localhost:3000/#' +
             querystring.stringify({
               error: 'invalid_token',
             }),

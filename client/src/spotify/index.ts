@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { getHashParams } from '../utils'
+import SpotifyWebApi from 'spotify-web-api-js'
 
-const EXPIRATION_DURATION = 3600 * 1000 //milliseconds
+const EXPIRATION_DURATION = 3600 * 1000
 
 const setTokenTimeStamp = () =>
   window.localStorage.setItem('spotify_token_timestamp', String(Date.now()))
@@ -78,3 +79,10 @@ export const logout = () => {
 }
 
 // API CALLS
+const spotifyApi = new SpotifyWebApi()
+
+export const getUserPlayingTrack = async ({ token }: { token: string }) => {
+  spotifyApi.setAccessToken(token)
+  const response = await spotifyApi.getMyCurrentPlayingTrack()
+  return response.is_playing
+}
