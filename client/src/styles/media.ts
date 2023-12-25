@@ -1,13 +1,13 @@
 import { css, CSSObject, CSSProp } from 'styled-components'
 
 const sizes: Record<string, number> = {
-  giant: 1440,
+  large: 1440,
   desktop: 1200,
-  netbook: 1000,
-  tablet: 768,
-  thone: 600,
-  phablet: 480,
-  phone: 376,
+  notebook: 1000,
+  lgtablet: 768,
+  smtablet: 600,
+  lgphone: 480,
+  smphone: 376,
   tiny: 330,
 }
 
@@ -16,7 +16,7 @@ type MediaObject = Record<
   (template: TemplateStringsArray, ...args: CSSObject[]) => CSSProp
 >
 
-const media: MediaObject = Object.keys(sizes).reduce((accumulator, label) => {
+export const media: MediaObject = Object.keys(sizes).reduce((accumulator, label) => {
   const emSize = sizes[label] / 16
 
   accumulator[label] = (template: TemplateStringsArray, ...args: CSSObject[]) => css`
