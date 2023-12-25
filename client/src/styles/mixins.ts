@@ -63,7 +63,7 @@ const mixins = {
 
   greenButton: css`
     display: inline-block;
-    background-color: ${colors.green};
+    background-color: ${colors.spotifyGreen};
     color: ${colors.white};
     font-weight: 700;
     font-size: ${fontSizes.xs};
