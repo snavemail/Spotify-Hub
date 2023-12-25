@@ -1,9 +1,7 @@
 import axios from 'axios'
 import { getHashParams } from '../utils'
-import SpotifyWebApi from 'spotify-web-api-js'
 
 const EXPIRATION_DURATION = 3600 * 1000
-
 const setTokenTimeStamp = () =>
   window.localStorage.setItem('spotify_token_timestamp', String(Date.now()))
 const setLocalAccessToken = (accessToken: string) => {
@@ -31,10 +29,10 @@ const getLocalRefreshToken = () => {
 const refreshAccessToken = async () => {
   try {
     const { data } = await axios.get(
-      `/refresh_token?refresh_token=${getLocalRefreshToken()}`,
+      `http://localhost:8888/refresh_token?refresh_token=${getLocalRefreshToken()}`,
     )
-    const { accessToken } = data
-    setLocalAccessToken(accessToken)
+    const { access_token } = data
+    setLocalAccessToken(access_token)
     window.location.reload()
     return
   } catch (e) {
@@ -79,10 +77,165 @@ export const logout = () => {
 }
 
 // API CALLS
-const spotifyApi = new SpotifyWebApi()
+const headers = {
+  Authorization: `Bearer ${token}`,
+  'Content-Type': 'application/json',
+}
 
-export const getUserPlayingTrack = async ({ token }: { token: string }) => {
-  spotifyApi.setAccessToken(token)
-  const response = await spotifyApi.getMyCurrentPlayingTrack()
-  return response.is_playing
+export const getProfile = async () => {
+  const res = await axios.get('https://api.spotify.com/v1/me', { headers })
+  return res
+}
+
+// Will get top 50 or 100 top songs (will try for 100)
+export const getTopItems = async (
+  limit: number,
+  offset: number,
+  timeFrame: string,
+  item: string,
+) => {
+  const res = await axios.get(`https://api.spotify.com/v1/me/top/${item}/`, {
+    params: {
+      limit: limit,
+      offset: offset,
+      time_range: timeFrame,
+    },
+    headers,
+  })
+  return res
+}
+
+export const getPlaylists = async (limit: number, offset: number) => {
+  const res = await axios.get(`https://api.spotify.com/v1/me/playlists`, {
+    params: {
+      limit: limit,
+      offset: offset,
+    },
+    headers,
+  })
+  return res
+}
+
+export const createPlaylist = async (
+  userID: string,
+  name: string,
+  description: string = '',
+  isPublic: boolean = true,
+) => {
+  const res = await axios.post(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+    headers,
+    data: {
+      name: name,
+      description: description,
+      public: isPublic,
+    },
+  })
+  return res
+}
+
+/**
+ *
+ * @param playlistID playlist to add the song to
+ * @param trackIDs list of ids to add to track
+ * @returns snapshot id, but just use this to check for error
+ */
+export const addTrackToPlaylist = async (playlistID: string, trackIDs: string[]) => {
+  const res = await axios.post(
+    `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+    {
+      headers,
+      data: {
+        uris: trackIDs,
+        position: 0,
+      },
+    },
+  )
+  return res
+}
+
+/**
+ * Gets me saved tracks
+ * @param limit num of songs
+ * @param offset where it starts
+ * @returns added_at, track
+ */
+export const getSavedTracks = async (limit: number, offset: number) => {
+  try {
+    const res = await axios.get(`https://api.spotify.com/v1/me/tracks?`, {
+      headers,
+      params: {
+        limit: limit,
+        offset: offset,
+      },
+    })
+    return res.data.items
+  } catch (error) {
+    console.error('Error getting saved tracks', error)
+    return []
+  }
+}
+
+export const getSavedTracksByDate = async (month: number, year: number) => {
+  try {
+    const limit = 50
+    let offset = 0
+    let allTracks: { added_at: string; track: any }[] = []
+    do {
+      const tracks = await getSavedTracks(limit, offset)
+      allTracks = [...allTracks, ...tracks]
+      offset += 50
+    } while (
+      allTracks.length > 0 &&
+      keepGoing(allTracks[allTracks.length - 1], month, year)
+    )
+    const filteredTracks = filterTracksByDate(allTracks, month, year)
+
+    return filteredTracks
+  } catch (error) {
+    console.error(`Error getting saved tracks for ${month}, ${year}`)
+    return []
+  }
+}
+
+const keepGoing = (
+  track: { added_at: string; track: any },
+  targetMonth: number,
+  targetYear: number,
+): boolean => {
+  const addedDate = new Date(track.added_at)
+  return (
+    (addedDate.getUTCMonth() + 1 >= targetMonth &&
+      addedDate.getUTCFullYear() === targetYear) ||
+    addedDate.getUTCFullYear() > targetYear ||
+    (addedDate.getUTCMonth() + 1 === targetMonth &&
+      addedDate.getUTCFullYear() === targetYear)
+  )
+}
+
+const isWithinDateRange = (
+  track: { added_at: string; track: any },
+  targetMonth: number,
+  targetYear: number,
+): boolean => {
+  const addedDate = new Date(track.added_at)
+  return (
+    addedDate.getUTCMonth() + 1 === targetMonth &&
+    addedDate.getUTCFullYear() === targetYear
+  )
+}
+
+const filterTracksByDate = (
+  tracks: { added_at: string; track: any }[],
+  targetMonth: number,
+  targetYear: number,
+): { added_at: string; track: any }[] => {
+  return tracks.filter((track) => isWithinDateRange(track, targetMonth, targetYear))
+}
+
+export const getUserInfo = async () => {
+  axios.all([getProfile()]).then(
+    axios.spread((user) => ({
+      user: user ? user.data : null,
+    })),
+  )
 }
