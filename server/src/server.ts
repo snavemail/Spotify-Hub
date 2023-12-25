@@ -32,7 +32,22 @@ app.get('/login', (req: Request, res: Response) => {
   res.cookie(stateKey, state)
 
   // your application requests authorization
-  const scope = 'user-read-private user-read-email'
+  const scopes = [
+    'user-read-private',
+    'user-read-email',
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-read-currently-playing',
+    'streaming',
+    'playlist-read-private',
+    'playlist-modify-private', //Make playlists + edit them
+    'playlist-modify-public',
+    'user-top-read',
+    'user-read-recently-played',
+    'user-library-modify',
+    'user-library-read',
+  ]
+  const scope = scopes.join(', ')
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
@@ -120,10 +135,8 @@ app.get('/refresh_token', (req: Request, res: Response) => {
   request.post(authOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
       const access_token = body.access_token
-      const refresh_token = body.refresh_token
       res.send({
         access_token: access_token,
-        refresh_token: refresh_token,
       })
     }
   })
@@ -131,5 +144,5 @@ app.get('/refresh_token', (req: Request, res: Response) => {
 
 const PORT = 8888
 app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`)
+  console.log(`Running server on port ${PORT}`)
 })
