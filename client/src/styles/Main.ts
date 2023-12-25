@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { media } from './media'
 
 const Main = styled.main`
   width: 100%;
@@ -6,17 +7,18 @@ const Main = styled.main`
   max-width: 1400px;
   min-height: 100vh;
   padding: 80px;
-  ${`1200
+  ${media.desktop`
     padding: 60px 50px;
   `};
-  ${`768
+  ${media.lgtablet`
     padding: 50px 40px;
   `};
-  ${`480
+  ${media.smtablet`
     padding: 30px 25px;
   `};
+  h1,
   h2 {
-    ${`768
+    ${media.lgtablet`
       text-align: center;
     `};
   }
