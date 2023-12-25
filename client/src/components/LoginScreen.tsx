@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { theme, mixins, Main } from '../styles'
+import { theme, mixins, Main, media } from '../styles'
 import IconSpotify from '../icons/Spotify'
 const { colors, fontSizes } = theme
 
@@ -10,11 +10,11 @@ const Login = styled(Main)`
 `
 
 const LoginPageHeader = styled.h1`
-  font-size: ${fontSizes.xxxl};
+  font-size: ${fontSizes.xxl};
 `
 
 const LogoWrapper = styled.div`
-  color: ${colors.green};
+  color: ${colors.spotifyGreen};
   margin-top: 30px;
   padding-bottom: 19px;
   display: flex;
@@ -24,7 +24,7 @@ const LogoWrapper = styled.div`
   height: 111px;
   align-items: center;
   transition: ${theme.transition};
-  ${`768
+  ${`${media.lgtablet}
     display: none;
   `};
   &:hover,
@@ -38,7 +38,7 @@ const LogoWrapper = styled.div`
 
 const LoginButton = styled.button`
   display: inline-block;
-  background-color: ${colors.green};
+  background-color: ${colors.spotifyGreen};
   color: ${colors.white};
   border-radius: 45px;
   padding: 26px 52px;
