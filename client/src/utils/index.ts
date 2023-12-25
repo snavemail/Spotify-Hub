@@ -40,3 +40,11 @@ export function formatMillisHuman(millis: number): string {
   const seconds = time.seconds
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 }
+
+// Higher-order function for async/await error handling
+export const catchErrors = <T extends (...args: any[]) => Promise<any>>(fn: T) =>
+  async function (...args: Parameters<T>): Promise<void> {
+    try {
+      await fn(...args)
+    } catch (err) {}
+  }
