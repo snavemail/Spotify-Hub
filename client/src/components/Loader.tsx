@@ -6,7 +6,8 @@ const { colors } = theme
 const Container = styled.div`
   ${mixins.flexCenter};
   width: 100%;
-  height: 88vh;
+  height: 100%;
+  flex-direction: column;
 `
 
 const dance = keyframes`
