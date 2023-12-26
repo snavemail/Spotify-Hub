@@ -1,84 +1,109 @@
-import React, { useEffect, useState } from 'react'
-import {
-  getProfile,
-  logout,
-  getTopItems,
-  getSavedTracks,
-  getSavedTracksByDate,
-} from '../spotify'
-import Loader from './Loader'
-import { AxiosResponse } from 'axios'
+import { useEffect, useState } from 'react'
+import { getProfile, getSavedTracksByDate } from '../spotify'
 import { styled } from 'styled-components'
-import { Main, mixins, theme } from '../styles'
+import { media, theme } from '../styles'
+import Loader from './Loader'
+import { LikedTrackInterface, UserInterface } from '../types'
+import User from './User'
+import LikedSong from './LikedSong'
 
-const HomeWrapper = styled(Main)`
-  ${mixins.flexCenter}
-  flex-direction: column
+const Container = styled.div`
+  display: flex;
+  height: 100vh;
+
+  ${media.lgtablet`
+  flex-direction: column;
+`};
 `
 
-const DisplayName = styled.h1`
-  margin-top: 30px;
-  font-size: ${theme.fontSizes.xxl};
-`
-
-const LogoutButton = styled.button`
-  background-color: ${theme.colors.spotifyGreen};
+const Navbar = styled.div`
+  display: flex;
+  width: 400px;
+  flex-direction: column;
+  background-color: ${theme.colors.darkGrey};
   color: ${theme.colors.white};
-  padding-left: ${theme.spacing.base};
-  padding-right: ${theme.spacing.base};
-  margin-top: 20px;
-`
+  padding: 16px;
+  margin: 8px 0px 8px 8px;
+  border-radius: 19px;
 
-export const AvatarWrapper = styled.div`
-  width: 150px;
-  height: 150px;
-  img {
-    border-radius: 100%;
+  .playlist {
+    height: 500px;
   }
+
+  ${media.lgtablet`
+  margin: 8px 8px 0px 8px;
+  width: calc(100vw - 16px);
+`};
 `
 
-export default function Home({ token }: { token: string }) {
-  const [user, setUser] = useState<AxiosResponse<any, any> | null>(null)
-  const [savedTracks, setSavedTracks] = useState<
-    { added_at: string; track: any }[] | null
-  >(null)
-  const [month, setMonth] = useState<number>(9)
+const LeftNavbar = ({ user }: { user: UserInterface | null }) => {
+  return (
+    <Navbar>
+      <div>{user ? <User user={user} /> : <Loader />}</div>
+      <div className="playlist">{<Loader />}</div>
+    </Navbar>
+  )
+}
+
+const Content = styled.div`
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  margin: 8px;
+  background-color: ${theme.colors.darkGrey};
+  border-radius: 19px;
+
+  ${media.lgtablet`
+  overflow-y: visible;
+`};
+`
+
+const MainContent = () => {
+  const [savedTracks, setSavedTracks] = useState<LikedTrackInterface[] | null>(null)
+  const [month, setMonth] = useState<number>(12)
   const [year, setYear] = useState<number>(2023)
 
   useEffect(() => {
-    const getMyProfile = async () => {
-      const myUser = await getProfile()
-      setUser(myUser)
-    }
-
     const getMySavedTracks = async () => {
       const tracks = await getSavedTracksByDate(month, year)
       setSavedTracks(tracks)
     }
 
     getMySavedTracks()
-    getMyProfile()
   }, [month, year])
 
   return (
-    <HomeWrapper>
-      {user ? (
-        <>
-          <AvatarWrapper>
-            <img
-              src={
-                user.data.images[1] ? user.data.images[1].url : user.data.images[0].url
-              }
-              alt={`profile pic for ${user.data.display_name}`}
-            />
-          </AvatarWrapper>
-          <DisplayName>{user.data.display_name}</DisplayName>
-          <LogoutButton onClick={logout}>Logout</LogoutButton>
-          <p>{savedTracks ? savedTracks.length : 'loading will be here'}</p>
-        </>
+    <Content>
+      {savedTracks ? (
+        <div>
+          <ol>
+            {savedTracks.map((savedTrack, index) => (
+              <LikedSong key={index} track={savedTrack.track} />
+            ))}
+          </ol>
+        </div>
       ) : (
         <Loader />
       )}
-    </HomeWrapper>
+    </Content>
+  )
+}
+
+export default function Home() {
+  const [user, setUser] = useState<UserInterface | null>(null)
+
+  useEffect(() => {
+    const getMyProfile = async () => {
+      const myUser = await getProfile()
+      setUser(myUser.data)
+    }
+    getMyProfile()
+  }, [])
+
+  return (
+    <Container>
+      <LeftNavbar user={user} />
+      <MainContent />
+    </Container>
   )
 }
