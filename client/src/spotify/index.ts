@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { getHashParams } from '../utils'
+import { LikedTrackInterface } from '../types'
 
-const EXPIRATION_DURATION = 3600 * 1000
+const EXPIRATION_DURATION = 3540 * 1000
 const setTokenTimeStamp = () =>
   window.localStorage.setItem('spotify_token_timestamp', String(Date.now()))
 const setLocalAccessToken = (accessToken: string) => {
@@ -179,7 +180,7 @@ export const getSavedTracksByDate = async (month: number, year: number) => {
   try {
     const limit = 50
     let offset = 0
-    let allTracks: { added_at: string; track: any }[] = []
+    let allTracks: LikedTrackInterface[] = []
     do {
       const tracks = await getSavedTracks(limit, offset)
       allTracks = [...allTracks, ...tracks]
@@ -198,7 +199,7 @@ export const getSavedTracksByDate = async (month: number, year: number) => {
 }
 
 const keepGoing = (
-  track: { added_at: string; track: any },
+  track: LikedTrackInterface,
   targetMonth: number,
   targetYear: number,
 ): boolean => {
@@ -213,7 +214,7 @@ const keepGoing = (
 }
 
 const isWithinDateRange = (
-  track: { added_at: string; track: any },
+  track: LikedTrackInterface,
   targetMonth: number,
   targetYear: number,
 ): boolean => {
@@ -225,10 +226,10 @@ const isWithinDateRange = (
 }
 
 const filterTracksByDate = (
-  tracks: { added_at: string; track: any }[],
+  tracks: LikedTrackInterface[],
   targetMonth: number,
   targetYear: number,
-): { added_at: string; track: any }[] => {
+): LikedTrackInterface[] => {
   return tracks.filter((track) => isWithinDateRange(track, targetMonth, targetYear))
 }
 
