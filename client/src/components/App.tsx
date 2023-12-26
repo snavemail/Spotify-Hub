@@ -21,7 +21,7 @@ function App() {
   return (
     <AppContainer>
       <GlobalStyle />
-      {accessToken ? <Home token={accessToken} /> : <LoginScreen />}
+      {accessToken ? <Home /> : <LoginScreen />}
     </AppContainer>
   )
 }
