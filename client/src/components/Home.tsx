@@ -20,11 +20,11 @@ const Navbar = styled.div`
   display: flex;
   width: 400px;
   flex-direction: column;
-  background-color: ${theme.colors.darkGrey};
+  background-color: ${theme.colors.black};
   color: ${theme.colors.white};
-  padding: 16px;
   margin: 8px 0px 8px 8px;
   border-radius: 19px;
+  gap: 8px;
 
   .playlist {
     height: 500px;
@@ -36,18 +36,38 @@ const Navbar = styled.div`
 `};
 `
 
+const NavbarContentTop = styled.div`
+  overflow-y: auto;
+  background-color: ${theme.colors.darkGrey};
+  border-radius: 19px;
+  ${media.lgtablet`
+  overflow-y: visible;
+`};
+`
+
+const NavbarContentBottom = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  background-color: ${theme.colors.darkGrey};
+  border-radius: 19px;
+  ${media.lgtablet`
+  flex: unset;
+  minHeight: 500px;
+`};
+`
+
 const LeftNavbar = ({ user }: { user: UserInterface | null }) => {
   return (
     <Navbar>
-      <div>{user ? <User user={user} /> : <Loader />}</div>
-      <div className="playlist">{<Loader />}</div>
+      <NavbarContentTop>{user ? <User user={user} /> : <Loader />}</NavbarContentTop>
+      <NavbarContentBottom className="playlist">{<Loader />}</NavbarContentBottom>
     </Navbar>
   )
 }
 
 const Content = styled.div`
   flex: 1;
-  padding: 16px;
+  padding: 8px;
   overflow-y: auto;
   margin: 8px;
   background-color: ${theme.colors.darkGrey};
@@ -74,6 +94,7 @@ const MainContent = () => {
 
   return (
     <Content>
+      <h1>Liked Songs</h1>
       {savedTracks ? (
         <div>
           <ol>
