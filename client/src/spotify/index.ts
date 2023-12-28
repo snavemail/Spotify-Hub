@@ -205,11 +205,10 @@ const keepGoing = (
 ): boolean => {
   const addedDate = new Date(track.added_at)
   return (
-    (addedDate.getUTCMonth() + 1 >= targetMonth &&
-      addedDate.getUTCFullYear() === targetYear) ||
-    addedDate.getUTCFullYear() > targetYear ||
-    (addedDate.getUTCMonth() + 1 === targetMonth &&
-      addedDate.getUTCFullYear() === targetYear)
+    (addedDate.getMonth() + 1 >= targetMonth &&
+      addedDate.getFullYear() === targetYear) ||
+    addedDate.getFullYear() > targetYear ||
+    (addedDate.getMonth() + 1 === targetMonth && addedDate.getFullYear() === targetYear)
   )
 }
 
@@ -220,8 +219,7 @@ const isWithinDateRange = (
 ): boolean => {
   const addedDate = new Date(track.added_at)
   return (
-    addedDate.getUTCMonth() + 1 === targetMonth &&
-    addedDate.getUTCFullYear() === targetYear
+    addedDate.getMonth() + 1 === targetMonth && addedDate.getFullYear() === targetYear
   )
 }
 
