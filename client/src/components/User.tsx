@@ -23,9 +23,16 @@ const LogoutButton = styled.button`
     color: ${theme.colors.black};
   }
 
+  ${media.notebook`
+  padding-left: 10px;
+  padding-right: 10px;
+`};
+
   ${media.lgphone`
   flex-direction: column;
   margin-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
 `};
 `
 
@@ -47,9 +54,16 @@ const SpotifyButton = styled.button`
     background-color: ${theme.colors.offGreen};
   }
 
+  ${media.notebook`
+  padding-left: 10px;
+  padding-right: 10px;
+`};
+
   ${media.lgphone`
   flex-direction: column;
   margin-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
 `};
 `
 
@@ -147,7 +161,8 @@ const User = ({ user }: { user: UserInterface }) => {
 
       <UserInfo>
         <UserName>{user.display_name}</UserName>
-        <UserDescription>{user.followers.total}</UserDescription>
+        <UserDescription>Followers: {user.followers.total}</UserDescription>
+        <UserDescription>Playlists: 69</UserDescription>
         <ButtonRow>
           <SpotifyButton onClick={openSpotify}>Spotify</SpotifyButton>
           <LogoutButton onClick={logout}>Log out</LogoutButton>
