@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import { theme, mixins, media } from '../styles'
-import { TrackInterface } from '../types'
-import { formatMillis } from '../utils'
+import { LikedTrackInterface, TrackInterface } from '../types'
+import { formatDate, formatMillis, formatMillisHuman } from '../utils'
 import IconPlay from '../icons/Play'
 import IconPause from '../icons/Pause'
 const { colors, fontSizes, spacing } = theme
@@ -57,21 +57,64 @@ const TrackMeta = styled.div`
   grid-template-columns: 1fr max-content;
   grid-gap: 10px;
 `
-const TrackName = styled.span`
+const TrackName = styled.a`
   margin-bottom: 5px;
   border-bottom: 1px solid transparent;
+  text-decoration: none;
+  color-inherit: parent;
   &:hover,
   &:focus {
     border-bottom: 1px solid ${colors.white};
   }
 `
-const TrackAlbum = styled.div`
+const TrackData = styled.div`
   ${mixins.overflowEllipsis};
   color: ${colors.lightGrey};
   font-size: ${fontSizes.sm};
   margin-top: 3px;
 `
+
+const TypeElement = styled.span`
+  user-select: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  align-items: center;
+  display: inline-flex;
+  gap: 0 4px;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: var(
+    --font-family,
+    CircularSp,
+    CircularSp-Arab,
+    CircularSp-Hebr,
+    CircularSp-Cyrl,
+    CircularSp-Grek,
+    CircularSp-Deva,
+    var(--fallback-fonts, sans-serif)
+  );
+  color: var(--text-subdued, #6a6a6a);
+`
+
+const TrackExplicit = styled.span`
+  display: inline-block;
+  background-color: #888;
+  color: #fff;
+  padding: 3px 5px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: var(--encore-graphic-size-decorative-base, 9px);
+`
+
 const TrackDuration = styled.span`
+  color: ${colors.lightGrey};
+  font-size: ${fontSizes.sm};
+`
+
+const TrackAddedAt = styled.span`
   color: ${colors.lightGrey};
   font-size: ${fontSizes.sm};
 `
@@ -100,38 +143,63 @@ const AudioPlayer = ({ audioSrc }: { audioSrc: string }) => {
   )
 }
 
-const LikedSong = ({ track }: { track: TrackInterface }) => {
+const LikedSong = ({ track }: { track: LikedTrackInterface }) => {
   return (
-    <li>
+    <li style={{ paddingLeft: 8, paddingRight: 8 }}>
       <TrackContainer>
         <div>
           <TrackArtwork>
-            {track.album.images.length && (
-              <img src={track.album.images[2].url} alt="Album Artwork" />
+            {track.track.album.images.length && (
+              <img src={track.track.album.images[2].url} alt="Album Artwork" />
             )}
-            <AudioPlayer audioSrc={track.preview_url} />
+            <AudioPlayer audioSrc={track.track.preview_url} />
           </TrackArtwork>
         </div>
         <TrackMeta>
           <TrackLeft>
-            <TrackName>{track.name}</TrackName>
-            <TrackAlbum>
-              {track.artists.map(({ name }, i) => (
-                <span key={i}>
+            <TrackName href={track.track.external_urls.spotify} target="_blank">
+              {track.track.name}
+            </TrackName>
+            <TrackData>
+              {track.track.explicit ? (
+                <>
+                  <TypeElement
+                    className="Type__TypeElement-sc-goli3j-0 cSfdnZ sQcIERaiZKFhOM1LrSmX"
+                    data-encore-id="type"
+                  >
+                    <TrackExplicit aria-label="Explicit" title="Explicit">
+                      E
+                    </TrackExplicit>
+                  </TypeElement>
+                  &nbsp;&nbsp;
+                </>
+              ) : (
+                <></>
+              )}
+
+              {track.track.artists.map(({ name }, i) => (
+                <span style={{ fontSize: 14 }} key={i}>
                   {name}
-                  {track.artists.length > 0 && i === track.artists.length - 1
+                  {track.track.artists.length > 0 &&
+                  i === track.track.artists.length - 1
                     ? ''
                     : ','}
                   &nbsp;&#8226;&nbsp;
                 </span>
               ))}
-              {track.album.name}
-            </TrackAlbum>
+              {track.track.album.name}
+            </TrackData>
           </TrackLeft>
           <TrackRight>
-            {track.duration_ms && (
-              <TrackDuration>{formatMillis(track.duration_ms)}</TrackDuration>
-            )}
+            <span style={{ display: 'inline-block' }}>
+              {track.added_at && (
+                <TrackAddedAt>{formatDate(track.added_at)}</TrackAddedAt>
+              )}
+              &nbsp; &nbsp;
+              {track.track.duration_ms && (
+                <TrackDuration>{formatMillis(track.track.duration_ms)}</TrackDuration>
+              )}
+            </span>
           </TrackRight>
         </TrackMeta>
       </TrackContainer>
