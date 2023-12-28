@@ -48,3 +48,56 @@ export const catchErrors = <T extends (...args: any[]) => Promise<any>>(fn: T) =
       await fn(...args)
     } catch (err) {}
   }
+
+export function numberToMonth(monthNumber: number): string {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+
+  if (monthNumber > 12 || monthNumber <= 0) {
+    return 'NARNIA'
+  }
+  return months[monthNumber - 1]
+}
+
+export function formatDate(inputDate: string) {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }
+  const formattedDate = new Date(inputDate).toLocaleDateString('en-US', options)
+  return formattedDate
+}
+
+export function formatDateMonthYear(date: Date, year: number) {
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+
+  const month = monthNames[date.getMonth()]
+
+  return `${month} ${year}`
+}
