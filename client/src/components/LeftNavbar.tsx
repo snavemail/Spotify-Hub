@@ -1,8 +1,10 @@
 import styled from 'styled-components'
 import { media, theme } from '../styles'
-import { UserInterface } from '../types'
+import { PlaylistInterface, UserInterface } from '../types'
 import Loader from './Loader'
 import User from './User'
+import Playlist from './Playlist'
+import { useState } from 'react'
 
 const Navbar = styled.div`
   display: flex;
@@ -41,6 +43,7 @@ const NavbarContentTop = styled.div`
 const NavbarContentBottom = styled.div`
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   background-color: ${theme.colors.darkGrey};
   border-radius: 19px;
   ${media.lgtablet`
@@ -49,11 +52,32 @@ const NavbarContentBottom = styled.div`
 `};
 `
 
-export const LeftNavbar = ({ user }: { user: UserInterface | null }) => {
+export const LeftNavbar = ({
+  user,
+  playlists,
+}: {
+  user: UserInterface | null
+  playlists: PlaylistInterface[] | null
+}) => {
+  const [loading, setLoading] = useState<boolean>(false)
   return (
     <Navbar>
       <NavbarContentTop>{user ? <User user={user} /> : <Loader />}</NavbarContentTop>
-      <NavbarContentBottom className="playlist">{<Loader />}</NavbarContentBottom>
+      <NavbarContentBottom className="playlist">
+        {loading ? (
+          <Loader />
+        ) : (
+          playlists && (
+            <div>
+              <ol>
+                {playlists.map((playlist, index) => (
+                  <Playlist key={index} playlist={playlist} />
+                ))}
+              </ol>
+            </div>
+          )
+        )}
+      </NavbarContentBottom>
     </Navbar>
   )
 }
