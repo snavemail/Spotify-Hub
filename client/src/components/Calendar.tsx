@@ -47,7 +47,7 @@ const CalendarView = ({ setItem, setYear }: { setItem: any; setYear: any }) => {
   const today = new Date()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Value>(today)
-  const minYear = 2019
+  const minYear = 2020
   const maxYear = new Date().getFullYear()
 
   const handleClick = (date: Value) => {
