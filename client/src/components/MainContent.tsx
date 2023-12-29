@@ -92,7 +92,7 @@ export const MainContent = () => {
             borderWidth={1}
             size={26}
           />
-          Liked Songs: &nbsp;{loading ? <>&#8734;</> : `${savedTracks?.length}`}
+          Songs: &nbsp;{loading ? <>&#8734;</> : `${savedTracks?.length}`}
         </div>
 
         <div>
