@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { styled } from 'styled-components'
 import { theme, mixins, media } from '../styles'
-import { LikedTrackInterface, TrackInterface } from '../types'
-import { formatDate, formatMillis, formatMillisHuman } from '../utils'
+import { LikedTrackInterface } from '../types'
+import { formatDate, formatMillis } from '../utils'
 import IconPlay from '../icons/Play'
 import IconPause from '../icons/Pause'
 const { colors, fontSizes, spacing } = theme
@@ -33,6 +33,7 @@ const PlaySymbol = styled.button`
 const TrackArtwork = styled.div`
   display: inline-block;
   position: relative;
+  padding-left: 8px;
   width: 50px;
   min-width: 50px;
   margin-right: ${spacing.base};
@@ -112,6 +113,7 @@ const TrackExplicit = styled.span`
 const TrackDuration = styled.span`
   color: ${colors.lightGrey};
   font-size: ${fontSizes.sm};
+  padding-right: 8px;
 `
 
 const TrackAddedAt = styled.span`
@@ -143,7 +145,7 @@ const AudioPlayer = ({ audioSrc }: { audioSrc: string }) => {
   )
 }
 
-const LikedSong = ({ track }: { track: LikedTrackInterface }) => {
+export default function LikedSong({ track }: { track: LikedTrackInterface }) {
   return (
     <li style={{ paddingLeft: 8, paddingRight: 8 }}>
       <TrackContainer>
@@ -206,5 +208,3 @@ const LikedSong = ({ track }: { track: LikedTrackInterface }) => {
     </li>
   )
 }
-
-export default LikedSong
