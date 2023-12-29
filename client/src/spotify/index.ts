@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getHashParams } from '../utils'
-import { LikedTrackInterface } from '../types'
+import { LikedTrackInterface, PlaylistInterface } from '../types'
 
 const EXPIRATION_DURATION = 3540 * 1000
 const setTokenTimeStamp = () =>
@@ -106,15 +106,43 @@ export const getTopItems = async (
   return res
 }
 
-export const getPlaylists = async (limit: number, offset: number) => {
+export const getTotalPlaylists = async () => {
   const res = await axios.get(`https://api.spotify.com/v1/me/playlists`, {
     params: {
-      limit: limit,
-      offset: offset,
+      limit: 1,
+      offset: 1,
     },
     headers,
   })
-  return res
+  const total = res.data.total
+  return total
+}
+
+export const getPlaylists = async () => {
+  try {
+    const total = await getTotalPlaylists()
+    const limit = 50
+    let offset = 1
+    let allPlaylists: PlaylistInterface[] = []
+    do {
+      const res = await axios.get(`https://api.spotify.com/v1/me/playlists`, {
+        params: {
+          limit: limit,
+          offset: offset,
+        },
+        headers,
+      })
+      const playlists = res.data.items
+      allPlaylists = [...allPlaylists, ...playlists]
+      offset += 50
+      console.log('doing it')
+    } while (offset + limit < total)
+    console.log(allPlaylists[0].name)
+    return allPlaylists
+  } catch (error) {
+    console.error(`Error getting saved playlists`)
+    return []
+  }
 }
 
 export const createPlaylist = async (
