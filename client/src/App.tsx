@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Home from './Home'
-import LoginScreen from './LoginScreen'
+import Home from './components/Home'
+import LoginScreen from './components/LoginScreen'
 import styled from 'styled-components'
-import { token } from '../spotify'
-import { GlobalStyle } from '../styles'
+import { token } from './spotify'
+import { GlobalStyle } from './styles'
 
 const AppContainer = styled.div`
   height: 100%;
