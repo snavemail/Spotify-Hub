@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/server.ts"
+    "start": "ts-node src/server.ts",
+    "server": "npm run build && node dist/server.js",
+    "dev": "nodemon --exec ts-node --transpile-only src/server.ts"
   },
   "keywords": [],
   "author": "",
