@@ -178,18 +178,10 @@ export default function LikedSong({ track }: { track: LikedTrackInterface }) {
               ) : (
                 <></>
               )}
-
-              {track.track.artists.map(({ name }, i) => (
-                <span style={{ fontSize: 14 }} key={i}>
-                  {name}
-                  {track.track.artists.length > 0 &&
-                  i === track.track.artists.length - 1
-                    ? ''
-                    : ','}
-                  &nbsp;&#8226;&nbsp;
-                </span>
-              ))}
-              {track.track.album.name}
+              <span style={{ fontSize: 14 }}>
+                {track.track.artists.map(({ name }) => name).join(', ')}
+              </span>
+              &nbsp;&#8226;&nbsp;{track.track.album.name}
             </TrackData>
           </TrackLeft>
           <TrackRight>
