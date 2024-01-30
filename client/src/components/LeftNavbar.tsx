@@ -47,8 +47,7 @@ const NavbarContentBottom = styled.div`
   background-color: ${theme.colors.darkGrey};
   border-radius: 19px;
   ${media.lgtablet`
-  flex: unset;
-  minHeight: 500px;
+  display: none;
 `};
 `
 
