@@ -6,7 +6,7 @@ import { getSavedTracksByDate } from '../spotify'
 import { theme, media } from '../styles'
 import { LikedTrackInterface } from '../types'
 import { formatDateMonthYear } from '../utils'
-import CalendarView from './Calendar'
+import CalendarView from './calendar/Calendar'
 import LikedSong from './LikedSong'
 import Loader from './Loader'
 
