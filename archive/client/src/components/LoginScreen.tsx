@@ -1,17 +1,17 @@
-import styled from 'styled-components'
-import { theme, mixins, Main, media } from '../styles'
-import IconSpotify from '../icons/Spotify'
-const { colors, fontSizes } = theme
+import styled from 'styled-components';
+import { theme, mixins, Main, media } from '../styles';
+import IconSpotify from '../icons/Spotify';
+const { colors, fontSizes } = theme;
 
 const Login = styled(Main)`
   ${mixins.flexCenter};
   flex-direction: column;
   min-height: 100vh;
-`
+`;
 
 const LoginPageHeader = styled.h1`
   font-size: ${fontSizes.xxl};
-`
+`;
 
 const LogoWrapper = styled.div`
   color: ${colors.spotifyGreen};
@@ -34,7 +34,7 @@ const LogoWrapper = styled.div`
   svg {
     width: 88px;
   }
-`
+`;
 
 const LoginButton = styled.button`
   display: inline-block;
@@ -53,20 +53,26 @@ const LoginButton = styled.button`
     background-color: ${colors.offGreen};
   }
   font-size: ${fontSizes.base};
-`
+`;
+
+const Subheader = styled.h2`
+  font-size: ${fontSizes.xl};
+  margin: 20px 0;
+`;
 
 export default function LoginScreen() {
   const handleLogin = async () => {
-    window.location.href = 'http://localhost:8888/login'
-  }
+    window.location.href = 'http://localhost:8888/login';
+  };
 
   return (
     <Login>
       <LogoWrapper>
         <IconSpotify />
       </LogoWrapper>
-      <LoginPageHeader>Spotify Hub</LoginPageHeader>
-      <LoginButton onClick={handleLogin}>Log in with Spotify</LoginButton>
+      <LoginPageHeader>Welcome To Spotify Hub</LoginPageHeader>
+      <Subheader>Create playlists, listen to your favorite songs, and discover new ones</Subheader>
+      <LoginButton onClick={handleLogin}>Connect with Spotify</LoginButton>
     </Login>
-  )
+  );
 }
