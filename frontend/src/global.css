@@ -1,0 +1,17 @@
+:root {
+  --spotify-green: #1db954;
+  --off-green: #1ed760;
+  --spotify-black: #121212;
+  --black: #000;
+  --white: #fff;
+  --gray: #828282;
+  --dark-gray: #181818;
+  --offwhite: #f5f5f5;
+  --spotify-font: CircularSp, CircularSp-Arab, CircularSp-Hebr, CircularSp-Cyrl, CircularSp-Grek,
+    CircularSp-Deva, var(--fallback-fonts, sans-serif);
+}
+
+body {
+  margin: 0;
+  background: var(--spotify-black);
+}

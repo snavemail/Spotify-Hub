@@ -1,0 +1,75 @@
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: transparent;
+  gap: 20px;
+  padding: 0 30px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--white);
+  margin: 0;
+  font-family: var(--spotify-font);
+  font-size: 2.6em;
+  font-weight: 800;
+  width: 100%;
+}
+
+.attraction-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.attraction-list > .attraction-item {
+  display: flex;
+  flex-direction: row;
+  color: var(--white);
+  font-family: var(--spotify-font);
+  font-size: 1.2em;
+  font-weight: 500;
+  gap: 6px;
+}
+
+.button-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.connect-button {
+  background: var(--spotify-green);
+  color: var(--white);
+  font-family: var(--spotify-font);
+  font-size: 1.25em;
+  font-weight: 800;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.connect-button:hover {
+  background: var(--off-green);
+}
+
+.connect-button:active {
+  /* Apply the pressed-down effect */
+  transform: scale(0.98); /* Scale the button down slightly */
+}
+
+.connect-button:focus:not(:active) {
+  transform: scale(1.02);
+}
